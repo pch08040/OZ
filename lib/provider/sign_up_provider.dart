@@ -15,6 +15,7 @@ class SignUpProvider extends ChangeNotifier {
   var _token = 20;
   List _myOz = ["1"];
   String _myProfile = '1';
+  List _loveList = [];
 
   String get name => _name;
 
@@ -104,6 +105,7 @@ class SignUpProvider extends ChangeNotifier {
       'myProfile': _myProfile,
       'name': _name,
       'token': _token,
+      'loveList' : _loveList,
     });
   }
 

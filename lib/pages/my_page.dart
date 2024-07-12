@@ -17,14 +17,14 @@ class MyPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<MyPage> {
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   WidgetsBinding.instance.addPostFrameCallback((_) {
-  //     Provider.of<TokenProvider>(context, listen: false).getData();
-  //     Provider.of<OzcardProvider>(context, listen: false).getMyCardData();
-  //   });
-  // }
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Provider.of<TokenProvider>(context, listen: false).getData();
+      Provider.of<OzcardProvider>(context, listen: false).getMyCardData();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

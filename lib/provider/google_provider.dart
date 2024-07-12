@@ -41,6 +41,7 @@ class GoogleProvider extends ChangeNotifier {
             'myProfile': '1', // 초기값으로 '1'
             'name': user.email, // 가입한 구글 이메일 사용
             'token': 10, // 초기값으로 10
+            'loveList': [], // 초기값으로 10
           };
 
           await userDoc.set(userData, SetOptions(merge: true));

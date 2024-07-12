@@ -6,7 +6,6 @@ class OzcardProvider extends ChangeNotifier {
   final _authentication = FirebaseAuth.instance;
   final firestore = FirebaseFirestore.instance;
   User? loggedUser;
-  bool loveState = true;
 
   String choiceId = '';
   String profileURL = '';
@@ -19,6 +18,8 @@ class OzcardProvider extends ChangeNotifier {
   bool checkShopOz = false;
 
   bool cardLoading = false;
+
+  bool loveState = false;
 
   Future<void> getCurrentUser() async {
     try {
@@ -252,51 +253,69 @@ class OzcardProvider extends ChangeNotifier {
 
   void plusLove(String? loveid) async {
     try {
-      // ozCard 컬렉션의 해당 문서를 참조
-      QuerySnapshot querySnapshot = await firestore
-          .collection('ozCard')
-          .where('id', isEqualTo: loveid)
+      // userinfo 컬렉션에서 현재 사용자의 문서를 찾음
+      QuerySnapshot user = await firestore
+          .collection('userinfo')
+          .where('email', isEqualTo: loggedUser!.email)
           .get();
-      // 첫 번째 일치하는 문서를 가져옴
-      DocumentSnapshot docSnapshot = querySnapshot.docs.first;
-      DocumentReference docRef = docSnapshot.reference;
-      // love 필드의 현재 값을 가져옴
-      int currentLove = docSnapshot['love'];
-      // 리스트가 비어있으면 false 채워져있다면 true
-      if (loveState) {
-        // love 필드의 값을 +1 함
-        currentLove += 1;
 
-        // Firestore에 love 필드를 업데이트
-        await docRef.update({'love': currentLove});
+      if (user.docs.isNotEmpty) {
+        DocumentSnapshot userDoc = user.docs.first;
+        DocumentReference userDocRef = userDoc.reference;
 
-        // 로컬 데이터 업데이트
-        int index =
-            cardDataList.indexWhere((element) => element['id'] == loveid);
-        if (index != -1) {
-          cardDataList[index]['love'] = currentLove;
+        // 유저의 loveList 배열을 가져옴
+        List<dynamic> loveList = userDoc['loveList'] ?? [];
+
+        // loveid가 loveList에 있는지 확인
+        bool isLoved = loveList.contains(loveid);
+
+        // ozCard 컬렉션의 해당 문서를 참조
+        QuerySnapshot result = await firestore
+            .collection('ozCard')
+            .where('id', isEqualTo: loveid)
+            .get();
+
+        if (result.docs.isNotEmpty) {
+          DocumentSnapshot cardLove = result.docs.first;
+          DocumentReference cardDocRef = cardLove.reference;
+
+          // love 필드의 현재 값을 가져옴
+          int currentLove = cardLove['love'];
+
+          if (isLoved) {
+            // loveid가 loveList에 있으면 제거하고, love 값을 -1
+            loveList.remove(loveid);
+            currentLove -= 1;
+            loveState = false;
+          } else {
+            // loveid가 loveList에 없으면 추가하고, love 값을 +1
+            loveList.add(loveid);
+            loveState = true;
+            currentLove += 1;
+          }
+
+          // Firestore에 loveList와 love 필드를 업데이트
+          await userDocRef.update({'loveList': loveList});
+          await cardDocRef.update({'love': currentLove});
+
+          // 로컬 데이터 업데이트
+          int index = cardDataList.indexWhere((doc) => doc['id'] == loveid);
+          if (index != -1) {
+            cardDataList[index]['love'] = currentLove;
+          }
+
+          // 화면 갱신
+          notifyListeners();
         }
-        loveState = false;
-        notifyListeners();
-      } else {
-        // love 필드의 값을 +1 함
-        currentLove -= 1;
-
-        // Firestore에 love 필드를 업데이트
-        await docRef.update({'love': currentLove});
-
-        // 로컬 데이터 업데이트
-        int index =
-            cardDataList.indexWhere((element) => element['id'] == loveid);
-        if (index != -1) {
-          cardDataList[index]['love'] = currentLove;
-        }
-        loveState = true;
-        notifyListeners();
       }
     } catch (e) {
       print('ozCard(하트추가): $e');
     }
+
+    // 유저가 하트를 누르면 유저의 하트리스트에 love카드의 id값이 들어가고 card의 하트값이 +1
+    // 그리고 loveState true로 바꿈.
+    // 다시클릭했을때 유저의 하트리스트에 카드의 id값이 있으면 card 하트값 -1
+    // 그리고 loveState false로 바꿈
   }
 
   Future<void> checkGetOz(String shopId) async {
