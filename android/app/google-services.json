@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "587685568487",
+    "project_id": "flutter-oz-c014a",
+    "storage_bucket": "flutter-oz-c014a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:587685568487:android:4b91278ebe046cc5486742",
+        "android_client_info": {
+          "package_name": "com.zeldafly.oz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "587685568487-n0ukgkk1ac5j4fm0cgka45m2etvsfo4k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.zeldafly.oz",
+            "certificate_hash": "b4d83aecd4ad16589297f7f075983e91cb77effe"
+          }
+        },
+        {
+          "client_id": "587685568487-7ecpskcg27ip5biotpuj91cqdlu26unp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCywPWoOR5j5j09GQNUhzCoe6U9hXbKQeE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "587685568487-7ecpskcg27ip5biotpuj91cqdlu26unp.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "587685568487-crm3b2qtv6ug0sro7gdn3h9vol2efevk.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.zeldafly.oz"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
