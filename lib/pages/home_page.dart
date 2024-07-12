@@ -67,7 +67,7 @@ class _HomePageState extends State<HomePage> {
               : Image.network(_ozCardProvider.mainProfileURL),
             ),
             Positioned(
-              top: 300,
+              top: (MediaQuery.of(context).size.height / 2) - 70,
               left: 0,
               right: 0,
               child: Column(
